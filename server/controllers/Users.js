@@ -34,7 +34,9 @@ const createRefreshToken = (user) => {
 const users = {
   // Get All Users
   getAllUsers: asyncHandler( async (req, res) => {
-    res.status(200).json({msg: 'Get All Users'});
+    const users = await Users.find().select('-_id -password -is2faOn').lean().exec(); // Get all users from database
+    if (!users) return res.status(400).json({msg: 'No users found!'}); // If no users found, return error message
+    res.status(200).json({msg: 'Success', users}); // If users found, return success message and users
   }),
   // Register User
   register: asyncHandler( async (req, res) => {
@@ -60,7 +62,18 @@ const users = {
   }),
   // Login User
   login: asyncHandler( async (req, res) => {
-    res.status(200).json({msg: 'Login User'});
+    const creds = req.body; // Get user info from request body
+
+    const user = await Users.findOne({email: creds.email});
+    if (!user) return res.status(400).json({msg: 'User not found!'}); // If user not found, return error message
+
+    const isMatch = bcrypt.compare(creds.password, user.password); // Compare password
+    if (!isMatch) return res.status(400).json({msg: 'Invalid credentials!'}); // If password is incorrect, return error message
+
+    const accessToken = createAccessToken(user); // Create access token
+    const refreshToken = createRefreshToken(user); // Create refresh token
+
+    res.status(200).json({msg: 'Login successful', accessToken, refreshToken}); // Return success message and tokens
   }),
 };
 
