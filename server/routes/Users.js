@@ -15,7 +15,7 @@ router.post('/auth/register', users.register);
 router.post('/auth/login', users.login);
 
 // Use Verify Token Middleware
-// router.use(verify);
+router.use(verify);
 
 // Private Routes
 router.get('/users', users.getAllUsers);
