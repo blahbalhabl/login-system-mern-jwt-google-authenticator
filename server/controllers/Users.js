@@ -38,7 +38,25 @@ const users = {
   }),
   // Register User
   register: asyncHandler( async (req, res) => {
-    res.status(200).json({msg: 'Register User'});
+    const user = req.body; // Get user info from request body
+
+    const exists = await Users.findOne({email: user.email}); // Check if user already exists     
+    if (exists) return res.status(400).json({msg: 'User already exists!'}); // If exists, return error message
+    
+    const hash = await bcrypt.hash(user.password, 10); //Hash password with 10 salt rounds
+
+    const newUser = new Users({ // Create new user object
+      username: user.username,
+      email: user.email,
+      password: hash,
+    });
+
+    // If not exists, create user
+    await Users
+      .create(newUser)
+      .then(() => {
+        res.status(200).json({msg: `User ${user.username} created successfully!`});
+      });
   }),
   // Login User
   login: asyncHandler( async (req, res) => {

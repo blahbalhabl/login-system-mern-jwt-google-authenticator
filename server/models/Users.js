@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   },
   secret: {
     type: String,
-    required: true,
+    required: false,
     max: 1024,
     min: 6
   }, 
