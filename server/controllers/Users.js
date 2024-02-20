@@ -27,7 +27,7 @@ const createRefreshToken = (user) => {
       username: user.username,
     },
     process.env.REFRESH_SECRET,
-    {expiresIn: '15m'}
+    {expiresIn: '30m'}
   );
 };
 
