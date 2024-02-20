@@ -32,13 +32,13 @@ const createRefreshToken = (user) => {
 };
 
 const users = {
-  // <=============== Get All Users ===============>
+  /* <=============== Get All Users ===============> */
   getAllUsers: asyncHandler( async (req, res) => {
     const users = await Users.find().select('-_id -password -is2faOn').lean().exec(); // Get all users from database
     if (!users) return res.status(400).json({msg: 'No users found!'}); // If no users found, return error message
     res.status(200).json({msg: 'Success', users}); // If users found, return success message and users
   }),
-  // <=============== Register User ===============>
+  /* <=============== Register User ===============> */
   register: asyncHandler( async (req, res) => {
     const user = req.body; // Get user info from request body
 
@@ -59,7 +59,7 @@ const users = {
         res.status(200).json({msg: `User ${user.username} created successfully!`});
       });
   }),
-  // <=============== Login User ===============>
+  /* <=============== Login User ===============> */
   login: asyncHandler( async (req, res) => {
     const creds = req.body; // Get user info from request body
 
