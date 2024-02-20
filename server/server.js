@@ -7,7 +7,6 @@ const dbConnect = require('./db/db-connect');
 // Import Routes
 const users = require('./routes/Users');
 
-
 // Initialize Express
 const app = express();
 const PORT = process.env.PORT || 4000;

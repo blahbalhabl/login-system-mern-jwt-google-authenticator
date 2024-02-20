@@ -1,6 +1,12 @@
 /*
   * This file contains the controller for the Users model.
 */
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const speakeasy = require('speakeasy');
+const qrcode = require('qrcode');
+const Users = require('../models/Users');
 
 const users = {
   // Get All Users
