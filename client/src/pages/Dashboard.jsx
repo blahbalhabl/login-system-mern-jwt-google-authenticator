@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react"
+import useAuth from "../hooks/useAuth"
 import axios from "../api/axios"
 
 const Dashboard = () => {
+	const { auth } = useAuth();
 	const [users, setUsers] = useState([]);
+
+	console.log(auth);
 
 	useEffect(() => {
 		// Fetch Data using getUsers function
