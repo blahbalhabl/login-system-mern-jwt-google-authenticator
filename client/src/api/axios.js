@@ -1,13 +1,12 @@
 // Code: axios.js
 import axios from 'axios';
-// const baseURL = import.meta.env.BASE_URL;
-const baseURL = 'http://localhost:4000/api';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default axios.create({
-    baseURL: baseURL,
+    baseURL: BASE_URL,
 });
 
 export const axiosPrivate = axios.create({
-    baseURL: baseURL,
+    baseURL: BASE_URL,
     withCredentials: true,
 });

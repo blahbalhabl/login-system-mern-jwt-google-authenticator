@@ -10,7 +10,8 @@ const users = require('./routes/Users');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors());
+const origins = process.env.ORIGIN.split(',');
+app.use(cors({origin: origins}));
 app.use(express.json());
 
 // Connect to MongoDB
