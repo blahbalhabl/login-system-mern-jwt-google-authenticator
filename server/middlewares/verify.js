@@ -10,7 +10,7 @@ const verify = (req, res, next) => {
 
   // Verify Token
   jwt.verify(token, process.env.ACCESS_SECRET, (err, payload) => {
-    if (err) return res.status(403).send('Invalid Token');
+    if (err) return res.status(401).send('Invalid Access Token');
     req.user = payload;
     next();
   });

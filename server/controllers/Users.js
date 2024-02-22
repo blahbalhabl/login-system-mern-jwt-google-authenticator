@@ -62,6 +62,8 @@ const users = {
   /* <=============== Login User ===============> */
   login: asyncHandler( async (req, res) => {
     const creds = req.body; // Get user info from request body
+    const isLoggedIn = req.cookies._refresh; // Check if user is already logged in
+    if (isLoggedIn) return res.status(400).json({msg: 'User already logged in!'}); // If logged in, return error message
 
     const user = await Users.findOne({email: creds.email});
     if (!user) return res.status(400).json({msg: 'User not found!'}); // If user not found, return error message
@@ -72,16 +74,25 @@ const users = {
     const accessToken = createAccessToken(user); // Create access token
     const refreshToken = createRefreshToken(user); // Create refresh token
 
+    // Create a new user object to return without password and with access token
+    const userPayload = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      token: accessToken,
+    };
+
     res.cookie('_refresh', refreshToken, {
       httpOnly: true,
       path: '/api',
       // expires: new Date(Date.now() + 1000 * 60 * 30), // Set refresh token expiration to 30 minutes
       // expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // Set refresh token expiration to 7 days
-      expires: new Date(Date.now() + 1000 * process.env.REFRESH_EXPIRES), // Set refresh token expiration to 20 seconds
+      expires: new Date(Date.now() + 1000 * process.env.REFRESH_EXPIRES), // Set refresh token expiration to 40 seconds
+      sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production' ? true : false,
     }); // Set refresh token in cookie
 
-    res.status(200).json({msg: 'Login successful', accessToken, refreshToken}); // Return success message and tokens
+    res.status(200).json({msg: 'Login successful', user: userPayload}); // Return success message and token
   }),
 };
 

@@ -13,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 const origins = process.env.ORIGIN.split(',');
-app.use(cors({origin: origins})); // Allow cross-origin requests
+app.use(cors({origin: origins, credentials: true})); // Allow cross-origin requests
 app.use(cookie()); // Parse cookies
 app.use(express.json()); // Parse JSON body
 
