@@ -16,7 +16,7 @@ const createAccessToken = (user) => {
       username: user.username,
     },
     process.env.ACCESS_SECRET,
-    {expiresIn: '15m'}
+    {expiresIn: `${process.env.ACCESS_EXPIRES}s`}
   );
 };
 
@@ -27,7 +27,7 @@ const createRefreshToken = (user) => {
       username: user.username,
     },
     process.env.REFRESH_SECRET,
-    {expiresIn: '30m'}
+    {expiresIn: `${process.env.REFRESH_EXPIRES}s`}
   );
 };
 
@@ -71,6 +71,15 @@ const users = {
 
     const accessToken = createAccessToken(user); // Create access token
     const refreshToken = createRefreshToken(user); // Create refresh token
+
+    res.cookie('_refresh', refreshToken, {
+      httpOnly: true,
+      path: '/api',
+      // expires: new Date(Date.now() + 1000 * 60 * 30), // Set refresh token expiration to 30 minutes
+      // expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // Set refresh token expiration to 7 days
+      expires: new Date(Date.now() + 1000 * process.env.REFRESH_EXPIRES), // Set refresh token expiration to 20 seconds
+      secure: process.env.NODE_ENV === 'production' ? true : false,
+    }); // Set refresh token in cookie
 
     res.status(200).json({msg: 'Login successful', accessToken, refreshToken}); // Return success message and tokens
   }),
