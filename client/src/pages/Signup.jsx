@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { TextField } from '@mui/material';
 
 const Signup = () => {
-	const { setAuth } = useAuth();
+	const { auth, setAuth } = useAuth();
 	const [inputs, setInputs] = useState({});
 	const nav = useNavigate();
 	const loc = useLocation();
@@ -19,34 +19,47 @@ const Signup = () => {
 	const handleSubmit = async (e) => {
 		try {
 			e.preventDefault();
-			const res = await axios.post('/auth/register', inputs);
-			if (!res) return console.error('No response from server');
-
-			await axios.post('/auth/login', inputs)
-			.then((res) => {
-				setAuth(res.data.user)
-				nav(from, { replace: true });
-			})
+			await axios.post('/auth/register', inputs)
+				.then( async () => {
+					await axios.post('/auth/login', inputs)
+						.then((res) => {
+							setAuth(res.data.user)
+							nav(from, { replace: true });
+						})
+				})
+				.catch((err) => {
+					throw new Error(err);
+				});
 		} catch (err) {
 			throw new Error(err);
 		}
 	};
+
+	useEffect(() => {
+		const isLoggedIn = () => {
+			if (!auth) return
+			nav(from, { replace: true });
+		};
+
+		isLoggedIn();
+	}, []);
 	
   return (
     <div className='flex h-screen justify-center items-center'>
 			<form
 				className='flex items-center flex-col gap-5 sm:w-3/4 lg:w-1/4 bg-white p-10 rounded-lg outline outline-1 outline-slate-200'
 				onSubmit={handleSubmit}>
-			<h1 className='text-2xl font-semibold text-blue-600'>
-				Welcome New User!
-			</h1>
-			<div className='flex flex-col gap-5 w-full'>
-				<TextField
+				<h1 className='text-2xl font-semibold text-blue-600'>
+					Welcome New User!
+				</h1>
+				<div className='flex flex-col gap-5 w-full'>
+					<TextField
 						className='caret-blue-600'
 						name="username"
 						id="username" 
 						label="Username" 
 						variant="outlined"
+						type='text'
 						required
 						fullWidth={true}
 						onChange={handleChange} />
@@ -56,6 +69,7 @@ const Signup = () => {
 						id="email" 
 						label="Email" 
 						variant="outlined"
+						type='email'
 						required
 						fullWidth={true}
 						onChange={handleChange} />
@@ -65,6 +79,7 @@ const Signup = () => {
 						id="password" 
 						label="Password" 
 						variant="outlined"
+						type='password'
 						required
 						fullWidth={true}
 						onChange={handleChange} />

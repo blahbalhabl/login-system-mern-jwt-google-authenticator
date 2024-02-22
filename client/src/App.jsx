@@ -4,7 +4,7 @@ import { AuthProvider } from "./context/AuthContext"
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
-import Porfile from "./pages/Porfile"
+import Profile from "./pages/Profile"
 // Import Components
 import Header from "./components/Header"
 import RequireAuth from "./components/RequireAuth"
@@ -22,7 +22,7 @@ const App = () => {
               {/* Auth Protected Routes */}
               <Route element={<RequireAuth allowedRoles={[1001]}/>}>
                 <Route path='/' element={<Dashboard />}/>
-                <Route path='/profile/:username' element={<Porfile />}/>
+                <Route path='/profile/:username' element={<Profile />}/>
               </Route>
             </Routes>
           </main>

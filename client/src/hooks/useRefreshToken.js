@@ -19,6 +19,7 @@ const useRefreshToken = () => {
       });
       return res.data.token;
     } catch (err) {
+      // setAuth(null);
       // TODO: return a message to pop up a modal that says "Session Expired"
     }
   }

@@ -97,6 +97,7 @@ const users = {
 
     res.status(200).json({msg: 'Login successful', user: userPayload}); // Return success message and token
   }),
+  /* <=============== Logout User ===============> */
   logout: asyncHandler( async (req, res) => {
     const isLoggedIn = req.cookies._refresh; // Check if user is already logged in
     if (!isLoggedIn) return res.status(400).json({msg: 'User not logged in!'}); // If not logged in, return error message

@@ -58,6 +58,7 @@ const Login = () => {
             id="email" 
             label="Email" 
             variant="outlined"
+            type='email'
             required
             fullWidth={true}
             onChange={handleChange} />
@@ -67,6 +68,7 @@ const Login = () => {
             id="password" 
             label="Password" 
             variant="outlined"
+            type='password'
             required
             fullWidth={true}
             onChange={handleChange} />
