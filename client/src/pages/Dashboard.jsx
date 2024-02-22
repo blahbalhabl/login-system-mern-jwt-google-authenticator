@@ -18,7 +18,10 @@ const Dashboard = () => {
 				.then((res) => {
 					setUsers(res.data.users);
 				})
-				.catch((err) => setUsers([]));
+				.catch((err) => {
+					setUsers([]);
+					throw new Error(err);
+				});
 		};
 		// Call getUsers() Function
 		getUsers();

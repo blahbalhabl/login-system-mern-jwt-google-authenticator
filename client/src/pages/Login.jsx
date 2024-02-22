@@ -1,12 +1,19 @@
-import { useState } from "react"
+/**
+ * @param {object} inputs - The inputs object
+ */
+
+import { useState, useEffect } from "react"
 import axios from "../api/axios"
 import useAuth from "../hooks/useAuth"
 import { TextField } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 
 const Login = () => {
   const nav = useNavigate();
-  const { setAuth } = useAuth();
+  const loc = useLocation();
+  const from = loc.state?.from.pathname || '/';
+
+  const { auth, setAuth } = useAuth();
   const [inputs, setInputs] = useState({});
 
   const handleChange = (e) => {
@@ -20,17 +27,26 @@ const Login = () => {
       await axios.post('/auth/login', inputs)
       .then((res) => {
         setAuth(res.data.user);
-        nav('/');
+        nav(from, { replace: true });
       })
     } catch (err) {
-      console.error(err);
+      throw new Error(err);
     }
   };
 
+  useEffect(() => {
+    const isLoggedIn = () => {
+      if (!auth) return
+      nav(from, { replace: true });
+    };
+
+    isLoggedIn();
+  }, []);
+
   return (
-    <div className="flex w-screen h-screen justify-center items-center">
+    <div className="flex h-screen justify-center items-center">
       <form 
-        className="flex items-center flex-col gap-5 sm:w-3/4 lg:w-1/4 bg-white p-10 rounded-lg outline outline-1 outline-slate-400"
+        className="flex items-center flex-col gap-5 sm:w-3/4 lg:w-1/4 bg-white p-10 rounded-lg outline outline-1 outline-slate-200"
         onSubmit={handleSubmit}>
         <h1 className='text-2xl font-semibold text-blue-600'>
           Sign In
@@ -56,10 +72,15 @@ const Login = () => {
             onChange={handleChange} />
         </div>
 				<button
-					className='bg-blue-500 text-white px-4 py-2  hover:bg-blue-700 rounded-md'
+					className='w-2/3 bg-blue-500 text-white text-xl font-semibold px-4 py-1  hover:bg-blue-700 rounded-md'
 					onClick={handleSubmit}>
             Log In
 				</button>
+        <Link
+          className="hover:underline text-blue-600 text-sm font-semibold"
+          to='/auth/register'>
+            Create New Account
+        </Link>
       </form>
     </div>
   )

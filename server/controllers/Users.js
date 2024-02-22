@@ -14,6 +14,7 @@ const createAccessToken = (user) => {
     {
       id: user._id,
       username: user.username,
+      role: user.role,
     },
     process.env.ACCESS_SECRET,
     {expiresIn: `${process.env.ACCESS_EXPIRES}s`}
@@ -25,6 +26,7 @@ const createRefreshToken = (user) => {
     {
       id: user._id,
       username: user.username,
+      role: user.role,
     },
     process.env.REFRESH_SECRET,
     {expiresIn: `${process.env.REFRESH_EXPIRES}s`}
@@ -79,6 +81,7 @@ const users = {
       id: user._id,
       username: user.username,
       email: user.email,
+      role: user.role,
       token: accessToken,
     };
 
@@ -88,11 +91,17 @@ const users = {
       // expires: new Date(Date.now() + 1000 * 60 * 30), // Set refresh token expiration to 30 minutes
       // expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // Set refresh token expiration to 7 days
       expires: new Date(Date.now() + 1000 * process.env.REFRESH_EXPIRES), // Set refresh token expiration to 40 seconds
-      sameSite: 'lax',
+      sameSite: 'Lax',
       secure: process.env.NODE_ENV === 'production' ? true : false,
     }); // Set refresh token in cookie
 
     res.status(200).json({msg: 'Login successful', user: userPayload}); // Return success message and token
+  }),
+  logout: asyncHandler( async (req, res) => {
+    const isLoggedIn = req.cookies._refresh; // Check if user is already logged in
+    if (!isLoggedIn) return res.status(400).json({msg: 'User not logged in!'}); // If not logged in, return error message
+    res.clearCookie('_refresh', {path: '/api'}); // Clear refresh token from cookie
+    res.status(200).json({msg: 'Logout successful'}); // Return success message
   }),
 };
 

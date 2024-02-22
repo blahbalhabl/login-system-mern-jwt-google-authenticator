@@ -1,21 +1,31 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
+// Import Pages
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
 import Porfile from "./pages/Porfile"
+// Import Components
+import Header from "./components/Header"
+import RequireAuth from "./components/RequireAuth"
 
 const App = () => {
   return (
-    <div className="w-screen">
+    <div className="min-h-screen max-w-screen bg-neutral-100">
       <Router>
         <AuthProvider>
-          <Routes>
-            <Route path='/' element={<Dashboard />}/>
-            <Route path='auth/login' element={<Login />} />
-            <Route path='auth/register' element={<Signup />} />
-            <Route path='/profile/:id' element={<Porfile />}/>
-          </Routes>
+          <Header />
+          <main className="">
+            <Routes>
+              <Route path='/auth/login' element={<Login />} />
+              <Route path='/auth/register' element={<Signup />} />
+              {/* Auth Protected Routes */}
+              <Route element={<RequireAuth allowedRoles={[1001]}/>}>
+                <Route path='/' element={<Dashboard />}/>
+                <Route path='/profile/:username' element={<Porfile />}/>
+              </Route>
+            </Routes>
+          </main>
         </AuthProvider>
       </Router>
     </div>

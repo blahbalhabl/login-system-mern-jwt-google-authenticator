@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import axios from '../api/axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { TextField } from '@mui/material';
 
 const Signup = () => {
+	const { setAuth } = useAuth();
 	const [inputs, setInputs] = useState({});
 	const nav = useNavigate();
 	const loc = useLocation();
@@ -21,19 +23,19 @@ const Signup = () => {
 			if (!res) return console.error('No response from server');
 
 			await axios.post('/auth/login', inputs)
-			.then(() => {
-				// Handle Login Logic Here
-				nav('/');
+			.then((res) => {
+				setAuth(res.data.user)
+				nav(from, { replace: true });
 			})
 		} catch (err) {
-			console.error(err);
+			throw new Error(err);
 		}
 	};
 	
   return (
-    <div className='h-screen flex justify-center items-center bg-gray-300'>
+    <div className='flex h-screen justify-center items-center'>
 			<form
-				className='flex items-center flex-col gap-5 sm:w-3/4 lg:w-1/4 bg-white p-10 rounded-lg outline outline-1 outline-slate-400'
+				className='flex items-center flex-col gap-5 sm:w-3/4 lg:w-1/4 bg-white p-10 rounded-lg outline outline-1 outline-slate-200'
 				onSubmit={handleSubmit}>
 			<h1 className='text-2xl font-semibold text-blue-600'>
 				Welcome New User!
@@ -68,10 +70,15 @@ const Signup = () => {
 						onChange={handleChange} />
 				</div>
 				<button
-					className='bg-blue-500 text-white px-4 py-2  hover:bg-blue-700 rounded-md'
+					className='w-2/3 bg-blue-500 text-white text-xl font-semibold py-1  hover:bg-blue-700 rounded-md'
 					onClick={handleSubmit}>
 						Signup
 				</button>
+				<Link
+          className="hover:underline text-blue-600 text-sm font-semibold"
+          to='/auth/login'>
+            Sign in instead
+        </Link>
 			</form>
 		</div>
   )
