@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom'
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import useAuth from '../hooks/useAuth'
 import useLogout from '../hooks/useLogout';
 
 const Header = () => {
   const { auth } = useAuth();
-  const axiosPrivate = useAxiosPrivate();
   const logout = useLogout();
 
   return (
