@@ -1,24 +1,31 @@
 import { useEffect, useState } from "react"
 import useAuth from "../hooks/useAuth"
-import axios from "../api/axios"
+import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
 	const { auth } = useAuth();
+	const nav = useNavigate();
+	const axiosPrivate = useAxiosPrivate();
 	const [users, setUsers] = useState([]);
-
-	console.log(auth);
+	const [request, setRequest] = useState(false);
 
 	useEffect(() => {
+		if (!auth) nav('/auth/login');
 		// Fetch Data using getUsers function
 		const getUsers = async () => {
-			await axios.get('/users') // TODO: use axiosPrivate for private routes
+			await axiosPrivate.get('/users')
 				.then((res) => {
 					setUsers(res.data.users);
 				})
+				.catch((err) => {
+					setUsers([]);
+					throw new Error(err);
+				});
 		};
 		// Call getUsers() Function
 		getUsers();
-	}, []);
+	}, [request]);
 
   return (
     <div>
@@ -35,6 +42,11 @@ const Dashboard = () => {
 					})
 				}
 			</div>
+			<button
+				className="bg-blue-500 text-white px-4 py-2  hover:bg-blue-700 rounded-md"
+				onClick={() => setRequest(!request)}>
+				Refresh
+			</button>
 		</div>
   )
 };

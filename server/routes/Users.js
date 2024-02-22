@@ -19,6 +19,7 @@ router.use(verify);
 
 // Private Routes
 router.get('/users', users.getAllUsers);
+router.get('/auth/logout', users.logout);
 
 // Export Router Object
 module.exports = router;

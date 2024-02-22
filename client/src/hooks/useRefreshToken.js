@@ -1,3 +1,4 @@
+// Desc: Custom hook to refresh the token
 import axios from '../api/axios'
 import useAuth from './useAuth'
 
@@ -5,17 +6,23 @@ const useRefreshToken = () => {
   const { setAuth } = useAuth();
 
   const refresh = async () => {
-    const res = await axios.post('/refresh', {
-      withCredentials: true
-    });
-		
-    setAuth({
-        ...prev,
-        id: res.data.id,
-        username: res.data.username,
-        email: res.data.email,
-    });
-    return res.data.token;
+    try {
+      const res = await axios.post('/auth/refresh');
+      setAuth(prev => {
+        return {
+          ...prev,
+          id: res.data.user._id,
+          username: res.data.user.username,
+          email: res.data.user.email,
+          role: res.data.user.role,
+          token: res.data.token,
+        }
+      });
+      return res.data.token;
+    } catch (err) {
+      // setAuth(null);
+      // TODO: return a message to pop up a modal that says "Session Expired"
+    }
   }
   return refresh;
 }

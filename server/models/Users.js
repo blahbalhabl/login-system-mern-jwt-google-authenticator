@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: true,
     max: 255
   },
@@ -22,6 +23,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     max: 1024,
     min: 6
+  },
+  role: {
+    type: Number,
+    default: 1001
   },
   is2faOn: {
     type: Boolean,
