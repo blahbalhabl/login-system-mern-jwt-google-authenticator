@@ -7,6 +7,7 @@ import axios from "../api/axios"
 import useAuth from "../hooks/useAuth"
 import { TextField } from "@mui/material"
 import { useLocation, useNavigate, Link } from "react-router-dom"
+import useIsAuthenticated from "../hooks/useIsAuthenticated"
 
 const Login = () => {
   const nav = useNavigate();
@@ -14,6 +15,8 @@ const Login = () => {
   const from = loc.state?.from.pathname || '/';
 
   const { auth, setAuth } = useAuth();
+  const isLoggedIn = useIsAuthenticated();
+
   const [inputs, setInputs] = useState({});
 
   const handleChange = (e) => {
@@ -35,13 +38,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const isLoggedIn = () => {
-      if (!auth) return
-      nav(from, { replace: true });
-    };
-
     isLoggedIn();
-  }, []);
+  }, [auth]);
 
   return (
     <div className="flex h-screen justify-center items-center">

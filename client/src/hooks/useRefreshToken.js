@@ -11,9 +11,10 @@ const useRefreshToken = () => {
       setAuth(prev => {
         return {
           ...prev,
-          id: res.data.user.id,
+          id: res.data.user._id,
           username: res.data.user.username,
           email: res.data.user.email,
+          role: res.data.user.role,
           token: res.data.token,
         }
       });
