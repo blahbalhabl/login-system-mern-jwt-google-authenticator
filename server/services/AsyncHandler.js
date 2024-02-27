@@ -1,3 +1,9 @@
+/**
+ * Async Handler
+ * @param {*} callback 
+ * @returns 
+ */
+
 const asyncHandler = ( callback ) => {
   return async (req, res, next) => {
     try {

@@ -2,36 +2,12 @@
   * This file contains the controller for the Users model.
 */
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
-const asyncHandler = require('../middlewares/asyncMiddleware');
+const asyncHandler = require('../services/AsyncHandler');
+const { createAccessToken, createRefreshToken } = require('../services/AuthTokens');
 const Users = require('../models/Users');
-
-const createAccessToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      username: user.username,
-      role: user.role,
-    },
-    process.env.ACCESS_SECRET,
-    {expiresIn: `${process.env.ACCESS_EXPIRES}s`}
-  );
-};
-
-const createRefreshToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      username: user.username,
-      role: user.role,
-    },
-    process.env.REFRESH_SECRET,
-    {expiresIn: `${process.env.REFRESH_EXPIRES}s`}
-  );
-};
 
 const users = {
   /* <=============== Get All Users ===============> */
@@ -67,7 +43,7 @@ const users = {
     const isLoggedIn = req.cookies._refresh; // Check if user is already logged in
     if (isLoggedIn) return res.status(400).json({msg: 'User already logged in!'}); // If logged in, return error message
 
-    const user = await Users.findOne({email: creds.email});
+    const user = await Users.findOne({email: creds.email}).select('-_id -password -is2faOn');
     if (!user) return res.status(400).json({msg: 'User not found!'}); // If user not found, return error message
 
     const isMatch = bcrypt.compare(creds.password, user.password); // Compare password

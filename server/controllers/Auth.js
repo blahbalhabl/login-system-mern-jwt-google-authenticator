@@ -5,7 +5,8 @@
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const asyncHandler = require('../middlewares/asyncMiddleware');
+const asyncHandler = require('../services/AsyncHandler');
+const { createAccessToken } = require('../services/AuthTokens');
 const User = require('../models/Users');
 
 const auth = {
@@ -19,14 +20,7 @@ const auth = {
       const user = await User.findById(decoded.id).select('-password');
       if (!user) return res.status(400).json({msg: 'No user found!'});
 
-      const accessToken = jwt.sign(
-        {
-          id: decoded.id, 
-          username: decoded.username
-        }, 
-        process.env.ACCESS_SECRET, 
-        {expiresIn: `${process.env.ACCESS_EXPIRES}s`}
-      );
+      const accessToken = createAccessToken(user);
       res.status(200).json({user, token: accessToken});
     });
   }),
