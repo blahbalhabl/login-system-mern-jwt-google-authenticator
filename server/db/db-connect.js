@@ -1,3 +1,8 @@
+/**
+ * @description Database connection
+ * @requires mongoose
+ */
+
 const mongoose = require('mongoose');
 
 // Connect to MongoDB

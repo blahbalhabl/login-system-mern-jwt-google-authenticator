@@ -1,8 +1,14 @@
-/*
-  * User Routes
-  * Import all functions from the Users Controller
-  * Export the routes to be used in server.js
-*/
+/**
+ * @apiGroup Users
+ * @description - User Related Routes
+ * @requires express
+ * @requires UsersModel
+ * @requires VerifyMiddleware
+ * @api {post} /auth/register Register User
+ * @api {post} /auth/login Login User
+ * @api {get} /users Get All Users
+ * @api {get} /auth/logout Logout User
+ */
 
 const express = require('express');
 const router = express.Router();

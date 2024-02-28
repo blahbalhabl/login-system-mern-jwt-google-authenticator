@@ -1,7 +1,9 @@
 /**
- * AuthTokens.js
- * Service for creating access and refresh tokens
+ * @description Service for creating access and refresh tokens
+ * @requires dotenv
+ * @requires jsonwebtoken
  */
+
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 

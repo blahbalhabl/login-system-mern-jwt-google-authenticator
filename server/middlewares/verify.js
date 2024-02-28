@@ -1,3 +1,9 @@
+/**
+ * @description: This file is used to verify the access token of the user.
+ * @requires dotenv
+ * @requires jsonwebtoken
+ */
+
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 

@@ -1,7 +1,9 @@
-/*
-  * User Model
-  * Required: Usename, Email, Password, Boolean 2FA Value, 2FA Secret
-*/
+/**
+ * @api {model} Users User
+ * @apiGroup Models 
+ * @description User Model
+ * @requires mongoose
+ */
 
 const mongoose = require('mongoose');
 

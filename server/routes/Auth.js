@@ -1,6 +1,9 @@
-/** 
- * Refresh Access Token Endpoint Route
-*/
+/**
+ * @description Router: Auth
+ * @requires express
+ * @requires AuthController
+ * @api {post} /auth/refresh Refresh Token
+ */
 
 const express = require('express');
 const router = express.Router();

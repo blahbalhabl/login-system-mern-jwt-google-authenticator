@@ -1,10 +1,13 @@
-/*
-  * This file contains the controller for the Users model.
-*/
+/**
+ * @description - User Controller
+ * @requires dotenv
+ * @requires bcrypt
+ * @requires asyncHandler
+ * @requires createAccessToken
+ */
+
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-const speakeasy = require('speakeasy');
-const qrcode = require('qrcode');
 const asyncHandler = require('../services/AsyncHandler');
 const { createAccessToken, createRefreshToken } = require('../services/AuthTokens');
 const Users = require('../models/Users');
@@ -13,15 +16,22 @@ const users = {
   /* <=============== Get All Users ===============> */
   getAllUsers: asyncHandler( async (req, res) => {
     const users = await Users.find().select('-_id -password -is2faOn').lean().exec(); // Get all users from database
-    if (!users) return res.status(400).json({msg: 'No users found!'}); // If no users found, return error message
+    if (!users) { // If no users found, return error message
+      res.status(400);
+      throw new Error({msg: 'No users found!'}); // Throw error
+    };
     res.status(200).json({msg: 'Success', users}); // If users found, return success message and users
   }),
   /* <=============== Register User ===============> */
   register: asyncHandler( async (req, res) => {
     const user = req.body; // Get user info from request body
 
-    const exists = await Users.findOne({email: user.email}); // Check if user already exists     
-    if (exists) return res.status(400).json({msg: 'User already exists!'}); // If exists, return error message
+    const exists = await Users.findOne({email: user.email}); // Check if user already exists
+    // if (exists) return res.status(400).json({msg: 'User already exists'}); // If user exists, return error message
+    if (exists) {
+      res.status(400);
+      throw new Error("User already exists"); // If user exists, return error message
+    };
     
     const hash = await bcrypt.hash(user.password, 10); //Hash password with 10 salt rounds
 
@@ -34,7 +44,7 @@ const users = {
     await Users
       .create(newUser)
       .then(() => {
-        res.status(200).json({msg: `User ${user.username} created successfully!`});
+        res.status(200).json({msg: `User ${newUser.username} created successfully!`});
       });
   }),
   /* <=============== Login User ===============> */

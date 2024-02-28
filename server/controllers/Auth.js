@@ -1,7 +1,9 @@
 /** 
- * Refresh Access Token Endpoint Controller
- * 
- **/
+ * @description - Refresh Access Token Controller 
+ * @param {Object} req - Request Object
+ * @param {Object} res - Response Object
+ * @returns {Object} - User and Access Token
+ */
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
