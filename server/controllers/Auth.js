@@ -1,8 +1,8 @@
 /** 
  * @description - Refresh Access Token Controller 
- * @param {Object} req - Request Object
- * @param {Object} res - Response Object
- * @returns {Object} - User and Access Token
+ * @requires dotenv
+ * @requires createAccessToken
+ * @requires UsersModel
  */
 
 require('dotenv').config();
@@ -12,6 +12,7 @@ const { createAccessToken } = require('../services/AuthTokens');
 const User = require('../models/Users');
 
 const auth = {
+  /* <=============== Refresh Access Token ===============> */
   refreshToken: asyncHandler( async (req, res) => {
     const token = req.cookies._refresh;
     if (!token) return res.status(401).json({msg: 'No Refresh Token Found!'});

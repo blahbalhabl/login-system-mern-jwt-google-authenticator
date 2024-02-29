@@ -7,7 +7,8 @@
  * @api {post} /auth/register Register User
  * @api {post} /auth/login Login User
  * @api {get} /users Get All Users
- * @api {get} /auth/logout Logout User
+ * @api {get} /auth/logout Logout 
+ * @api {get} /auth/create-two-factor Create Two Factor Auth Secret
  */
 
 const express = require('express');
@@ -26,6 +27,7 @@ router.use(verify);
 // Private Routes
 router.get('/users', users.getAllUsers);
 router.get('/auth/logout', users.logout);
+router.get('/auth/create-two-factor', users.create2faSecret);
 
 // Export Router Object
 module.exports = router;
