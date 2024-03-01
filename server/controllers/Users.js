@@ -56,7 +56,7 @@ const users = {
     const user = await Users.findOne({email: creds.email});
     if (!user) return res.status(400).json({msg: 'User not found!'}); // If user not found, return error 
 
-    const isMatch = bcrypt.compare(creds.password, user.password); // Compare password
+    const isMatch = await bcrypt.compare(creds.password, user.password); // Compare password
     if (!isMatch) return res.status(400).json({msg: 'Incorrect Password!'}); // If password is incorrect, return error message
 
     if (user?.secret && !creds.otp) return res.status(200).json({msg: 'two-factor otp required'}); // If 2FA is enabled, return 2FA required message
