@@ -28,6 +28,7 @@ router.use(verify);
 router.get('/users', users.getAllUsers);
 router.get('/auth/logout', users.logout);
 router.get('/auth/create-two-factor', users.create2faSecret);
+router.get('/auth/disable-two-factor', users.remove2faSecret);
 
 // Export Router Object
 module.exports = router;

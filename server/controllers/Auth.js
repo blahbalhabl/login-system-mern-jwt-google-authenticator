@@ -20,7 +20,7 @@ const auth = {
     jwt.verify(token, process.env.REFRESH_SECRET, async (err, decoded) => {
       if (err) return res.status(403).json({msg: 'Invalid Refresh token!'});
 
-      const user = await User.findById(decoded.id).select('-password');
+      const user = await User.findById(decoded.id).select('-password -secret');
       if (!user) return res.status(400).json({msg: 'No user found!'});
 
       const accessToken = createAccessToken(user);

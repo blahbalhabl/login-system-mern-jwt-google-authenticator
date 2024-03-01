@@ -18,6 +18,11 @@ const secure = {
         const issuer = 'Login System';
         return qrcode.toDataURL(`otpauth://totp/${issuer}:${email}?secret=${secret}&issuer=${issuer}`);
     },
+    /* <=============== Verify OTP to Secret ===============> */
+    speakeasyVerify: (otp, secret) => {
+        const encoding = 'base32';
+        return speakeasy.totp.verify({secret, encoding: encoding, token: otp});
+    },
 };
 
 module.exports = secure;
