@@ -50,7 +50,7 @@ const users = {
   /* <=============== Login User ===============> */
   login: asyncHandler( async (req, res) => {
     const creds = req.body; // Get user info from request body
-    const isLoggedIn = req.cookies._refresh; // Check if user is already logged in
+    const isLoggedIn = req.cookies?._refresh; // Check if user is already logged in
     if (isLoggedIn) return res.status(400).json({msg: 'User already logged in!'}); // If logged in, return error
 
     const user = await Users.findOne({email: creds.email});
