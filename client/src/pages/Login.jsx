@@ -3,11 +3,13 @@
  */
 
 import { useState, useEffect } from "react"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 import axios from "../api/axios"
 import useAuth from "../hooks/useAuth"
-import { TextField } from "@mui/material"
-import { useLocation, useNavigate, Link } from "react-router-dom"
 import useIsAuthenticated from "../hooks/useIsAuthenticated"
+import Button from "../components/Button"
+import ProtectedField from "../components/ProtectedField"
+import { TextField } from "@mui/material"
 
 const Login = () => {
   const nav = useNavigate();
@@ -18,6 +20,7 @@ const Login = () => {
   const isLoggedIn = useIsAuthenticated();
 
   const [inputs, setInputs] = useState({});
+  const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,9 +33,11 @@ const Login = () => {
       await axios.post('/auth/login', inputs)
       .then((res) => {
         setAuth(res.data.user);
+        setError(false);
         nav(from, { replace: true });
       })
     } catch (err) {
+      setError(true);
       throw new Error(err);
     }
   };
@@ -50,32 +55,39 @@ const Login = () => {
           Sign In
         </h1>
         <div className='flex flex-col gap-5 w-full'>
+          {error && <p className='text-red-500 text-sm font-semibold text-center w-full'>Invalid Login Credentials</p>}
           <TextField
             className='caret-blue-600'
             name="email"
             id="email" 
             label="Email" 
             variant="outlined"
+            error={error}
             type='email'
             required
-            fullWidth={true}
-            onChange={handleChange} />
-          <TextField
+            fullWidth
+            onChange={handleChange} 
+          />
+          <ProtectedField
             className='caret-blue-600'
             name="password"
             id="password" 
             label="Password" 
             variant="outlined"
-            type='password'
+            error={error}
+            value={inputs.password}
             required
-            fullWidth={true}
-            onChange={handleChange} />
+            fullWidth
+            onChange={handleChange}
+          />
         </div>
-				<button
-					className='w-2/3 bg-blue-500 text-white text-xl font-semibold px-4 py-1  hover:bg-blue-700 rounded-md'
-					onClick={handleSubmit}>
-            Log In
-				</button>
+        <Button
+          className='text-white text-xl font-semibold'
+          type='primary'
+          label='Sign In'
+          onClick={handleSubmit}
+          fullWidth
+        />
         <Link
           className="hover:underline text-blue-600 text-sm font-semibold"
           to='/auth/register'>
