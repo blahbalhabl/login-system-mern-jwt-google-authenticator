@@ -1,7 +1,9 @@
-/*
-  * User Model
-  * Required: Usename, Email, Password, Boolean 2FA Value, 2FA Secret
-*/
+/**
+ * @api {model} Users User
+ * @apiGroup Models 
+ * @description User Model
+ * @requires mongoose
+ */
 
 const mongoose = require('mongoose');
 
@@ -28,13 +30,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 1001
   },
-  is2faOn: {
-    type: Boolean,
-    default: false
-  },
   secret: {
     type: String,
     required: false,
+    default: "",
     max: 1024,
     min: 6
   }, 

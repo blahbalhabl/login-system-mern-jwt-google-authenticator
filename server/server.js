@@ -20,14 +20,10 @@ app.use(express.json()); // Parse JSON body
 // Connect to MongoDB
 dbConnect;
 
-// Use Private Routes
-app.use
-  ('/api',
-  // Routes Without Verify Token Middleware
-  auth,
-  // Routes With Verify Token Middleware
-  users,
-  );
+// API Routes
+app.use('/api', auth, users);
 
 // Start Server
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+module.exports = app;

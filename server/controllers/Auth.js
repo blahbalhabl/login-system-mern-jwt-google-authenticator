@@ -1,14 +1,18 @@
 /** 
- * Refresh Access Token Endpoint Controller
- * 
- **/
+ * @description - Refresh Access Token Controller 
+ * @requires dotenv
+ * @requires createAccessToken
+ * @requires UsersModel
+ */
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const asyncHandler = require('../middlewares/asyncMiddleware');
+const asyncHandler = require('../services/AsyncHandler');
+const { createAccessToken } = require('../services/AuthTokens');
 const User = require('../models/Users');
 
 const auth = {
+  /* <=============== Refresh Access Token ===============> */
   refreshToken: asyncHandler( async (req, res) => {
     const token = req.cookies._refresh;
     if (!token) return res.status(401).json({msg: 'No Refresh Token Found!'});
@@ -16,17 +20,10 @@ const auth = {
     jwt.verify(token, process.env.REFRESH_SECRET, async (err, decoded) => {
       if (err) return res.status(403).json({msg: 'Invalid Refresh token!'});
 
-      const user = await User.findById(decoded.id).select('-password');
+      const user = await User.findById(decoded.id).select('-password -secret');
       if (!user) return res.status(400).json({msg: 'No user found!'});
 
-      const accessToken = jwt.sign(
-        {
-          id: decoded.id, 
-          username: decoded.username
-        }, 
-        process.env.ACCESS_SECRET, 
-        {expiresIn: `${process.env.ACCESS_EXPIRES}s`}
-      );
+      const accessToken = createAccessToken(user);
       res.status(200).json({user, token: accessToken});
     });
   }),
