@@ -84,7 +84,7 @@ const users = {
       // expires: new Date(Date.now() + 1000 * 60 * 30), // Set refresh token expiration to 30 minutes
       // expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // Set refresh token expiration to 7 days
       expires: new Date(Date.now() + 1000 * process.env.REFRESH_EXPIRES), // Set refresh token expiration to 40 seconds
-      sameSite: 'Lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'Lax' : 'None',
       secure: process.env.NODE_ENV === 'production' ? true : false,
     }); // Set refresh token in cookie
 
