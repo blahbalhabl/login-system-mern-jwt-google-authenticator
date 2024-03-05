@@ -36,8 +36,10 @@ const Dashboard = () => {
     <div>
 			<h1>Dashboard</h1>
 			<Modal
+				type='confirm'
+				btnType='primary'
 				text='Show Users'
-				title='Users' 
+				title='Users'
 				callback={tryCallaback}>
 				<div>
 					{

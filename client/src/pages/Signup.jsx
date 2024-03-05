@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { TextField } from '@mui/material';
 import useIsAuthenticated from '../hooks/useIsAuthenticated';
+import Button from '../components/Button';
+import ProtectedField from '../components/ProtectedField';
+import { TextField } from '@mui/material';
+
 
 const Signup = () => {
 	const { auth, setAuth } = useAuth();
 	const [inputs, setInputs] = useState({});
+
 	const nav = useNavigate();
 	const isLoggedIn = useIsAuthenticated();
 	const loc = useLocation();
@@ -16,6 +20,11 @@ const Signup = () => {
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setInputs({ ...inputs, [name]: value });
+	};
+
+	const isPasswordMatch = () => {
+		// returns true if the passwords do not match
+		return inputs.password !== inputs.confirmPassword;
 	};
 
 	const handleSubmit = async (e) => {
@@ -58,7 +67,7 @@ const Signup = () => {
 						variant="outlined"
 						type='text'
 						required
-						fullWidth={true}
+						fullWidth
 						onChange={handleChange} />
 					<TextField
 						className='caret-blue-600'
@@ -68,24 +77,37 @@ const Signup = () => {
 						variant="outlined"
 						type='email'
 						required
-						fullWidth={true}
+						fullWidth
 						onChange={handleChange} />
-					<TextField
+					<ProtectedField
 						className='caret-blue-600'
 						name="password"
-						id="password" 
+						id="password"
 						label="Password" 
 						variant="outlined"
-						type='password'
+						error={isPasswordMatch()}
 						required
-						fullWidth={true}
+						fullWidth
+						onChange={handleChange} />
+					<ProtectedField
+						className='caret-blue-600'
+						name="confirmPassword"
+						id="confirmPassword"
+						label="Confirm Password" 
+						variant="outlined"
+						helperText={isPasswordMatch() ? '' : 'Passwords do not match'}
+						error={isPasswordMatch()}
+						required
+						fullWidth
 						onChange={handleChange} />
 				</div>
-				<button
-					className='w-2/3 bg-blue-500 text-white text-xl font-semibold py-1  hover:bg-blue-700 rounded-md'
-					onClick={handleSubmit}>
-						Signup
-				</button>
+				<Button
+          className='text-white text-xl font-semibold'
+          type='primary'
+          label='Sign Up'
+          onClick={handleSubmit}
+          fullWidth
+        />
 				<Link
           className="hover:underline text-blue-600 text-sm font-semibold"
           to='/auth/login'>
