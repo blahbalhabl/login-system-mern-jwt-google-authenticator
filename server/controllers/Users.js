@@ -53,6 +53,8 @@ const users = {
     const isLoggedIn = req.cookies?._refresh; // Check if user is already logged in
     if (isLoggedIn) return res.status(400).json({msg: 'User already logged in!'}); // If logged in, return error
 
+    if (!creds.email || !creds.password) return res.status(400).json({msg: 'Invalid credentials!'}); // If no credentials, return error message
+
     const user = await Users.findOne({email: creds.email});
     if (!user) return res.status(400).json({msg: 'User not found!'}); // If user not found, return error 
 

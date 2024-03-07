@@ -10,6 +10,7 @@ import useIsAuthenticated from "../hooks/useIsAuthenticated"
 import Button from "../components/Button"
 import ProtectedField from "../components/ProtectedField"
 import { TextField } from "@mui/material"
+import { toast } from "react-toastify"
 
 const Login = () => {
   const nav = useNavigate();
@@ -35,9 +36,11 @@ const Login = () => {
         setAuth(res.data.user);
         setError(false);
         nav(from, { replace: true });
+        toast(res.data.msg, { type: 'success' });
       })
     } catch (err) {
       setError(true);
+      toast(err.response.data.msg, { type: 'error' });
       throw new Error(err);
     }
   };
@@ -55,7 +58,6 @@ const Login = () => {
           Sign In
         </h1>
         <div className='flex flex-col gap-5 w-full'>
-          {error && <p className='text-red-500 text-sm font-semibold text-center w-full'>Invalid Login Credentials</p>}
           <TextField
             className='caret-blue-600'
             name="email"
